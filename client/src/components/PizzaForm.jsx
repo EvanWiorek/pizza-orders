@@ -78,9 +78,9 @@ export default ({
     }
     else if (undeliveredError === null) {
       onSubmitProp({ pizzaType, pizzaSize, notes, deliveryTime });
-      if (errors === []) {
-        navigate("/");
-      }
+      // if (errors === []) {
+      //   navigate("/");
+      // }
     }
 
   };
