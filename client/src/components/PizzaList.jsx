@@ -4,17 +4,40 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default ({ pizzas, setPizzas, removeFromDom}) => {
-  const handleToggleDelivered = (pizzaId) => {
-    const deliveredPizzas = pizzas.map((pizza, mapIdx) => {
-      if (pizzaId === pizza._id) {
-        const deliveredPiza = { ...pizza, isDelivered: !pizza.isDelivered };
-        return deliveredPiza;
-      }
-      return pizza;
-    });
+  const [isDelivered, setIsDelivered] = useState();
+  const [deliveryTime, setDeliveryTime] = useState();
+  const navigate = useNavigate();
 
-    setPizzas(deliveredPizzas);
+  const updatePizzaCall = (pizzaId) => {
+    axios.get(`http://localhost:8000/api/pizzas/${pizzaId}`).then((res) => {
+      setIsDelivered(res.data.isDelivered);
+      setIsDelivered(!isDelivered)
+    });
+    // console.log(pizzaId);
+    // console.log(isDelivered);
+    setDeliveryTime(new Date)
+    axios
+    .put(`http://localhost:8000/api/pizzas/${pizzaId}`, {
+      isDelivered,
+      deliveryTime
+    })
+    .then((res) => console.log(res))
+    .catch((err) => console.error(err));
+    // navigate("/pizzas");
+    // navigate(0);
   };
+
+  //   const handleToggleDelivered = (pizzaId) => {
+//     const deliveredPizzas = pizzas.map((pizza, mapIdx) => {
+//       if (pizzaId === pizza._id) {
+//         const deliveredPiza = { ...pizza, isDelivered: !pizza.isDelivered };
+//         return deliveredPiza;
+//       }
+//       return pizza;
+//     });
+
+//     setPizzas(deliveredPizzas);
+//   };
 
   //get all pizzas in array to display on page
   useEffect(() => {
@@ -72,7 +95,7 @@ export default ({ pizzas, setPizzas, removeFromDom}) => {
                       className="form-check-input"
                       checked={pizza.isDelivered}
                       name="isDelivered"
-                      onChange={(e) => handleToggleDelivered(pizza._id)}
+                      onChange={() => updatePizzaCall(pizza._id)}
                     />
                 </div>
                 </div>
